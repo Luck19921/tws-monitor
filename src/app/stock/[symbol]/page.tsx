@@ -13,12 +13,18 @@ interface PageProps {
     params: Promise<{ symbol: string }>;
 }
 
+import { headers } from 'next/headers';
+
 export default async function StockPage({ params }: PageProps) {
     const { symbol } = await params;
 
-    // Use mock API endpoints strictly for server-side layout mounting 
-    // Data fetching happens inside the client components
-    const res = await fetch(`http://localhost:3000/api/stocks/${symbol}`, { cache: 'no-store' });
+    // Build dynamic base URL for server-side fetch (works in dev + production)
+    const headersList = await headers();
+    const host = headersList.get('host') || 'localhost:3000';
+    const protocol = headersList.get('x-forwarded-proto') || 'http';
+    const baseUrl = `${protocol}://${host}`;
+
+    const res = await fetch(`${baseUrl}/api/stocks/${symbol}`, { cache: 'no-store' });
     let stockData = null;
 
     if (res.ok) {
