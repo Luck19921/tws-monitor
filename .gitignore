@@ -32,6 +32,13 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+# 雖然 .env* 理論上涵蓋以上所有，但分開寫能避免特定工具誤判
 
 # vercel
 .vercel
