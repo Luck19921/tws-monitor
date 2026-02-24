@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model WatchList {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  stocks    Stock[]
+}
+
+model Stock {
+  id          String     @id @default(cuid())
+  symbol      String
+  name        String
+  watchListId String
+  watchList   WatchList  @relation(fields: [watchListId], references: [id], onDelete: Cascade)
+
+  @@unique([symbol, watchListId])
+}
